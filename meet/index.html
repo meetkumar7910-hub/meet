@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Birthday Fire Game 🎮🎉</title>
+
+<style>
+body{
+  margin:0;
+  overflow:hidden;
+  background:black;
+  font-family:Arial;
+  color:white;
+  text-align:center;
+}
+
+/* SCREEN 1 */
+#screen1{
+  position:absolute;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background: radial-gradient(circle,#0a0a2a,#000);
+}
+
+h1{
+  color:gold;
+  font-size:45px;
+  animation: glow 2s infinite;
+}
+
+@keyframes glow{
+  0%{text-shadow:0 0 10px red;}
+  50%{text-shadow:0 0 30px yellow;}
+  100%{text-shadow:0 0 10px blue;}
+}
+
+button{
+  padding:12px 20px;
+  font-size:18px;
+  border:none;
+  border-radius:10px;
+  background:gold;
+  cursor:pointer;
+  margin-top:20px;
+}
+
+/* GAME HUD */
+#score{
+  position:absolute;
+  top:20px;
+  left:20px;
+  font-size:20px;
+  color:white;
+  z-index:2;
+}
+
+/* SCREEN 2 */
+#screen2{
+  display:none;
+  height:100vh;
+  background: radial-gradient(circle,#000,#050018);
+  text-align:center;
+  padding-top:70px;
+}
+
+h2{
+  font-size:55px;
+  color:gold;
+  animation: glow 2s infinite;
+}
+
+p{
+  font-size:22px;
+  color:pink;
+  max-width:80%;
+  margin:auto;
+  line-height:1.6;
+}
+
+#emoji{
+  font-size:50px;
+  margin-top:20px;
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.3);}
+  100%{transform:scale(1);}
+}
+
+/* FIREWORK PARTICLES */
+.particle{
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+}
+
+/* BALLOON */
+.balloon{
+  position:absolute;
+  bottom:-100px;
+  width:30px;
+  height:40px;
+  border-radius:50%;
+  animation: float 8s linear infinite;
+}
+
+@keyframes float{
+  from{transform:translateY(0);}
+  to{transform:translateY(-120vh);}
+}
+</style>
+</head>
+
+<body>
+
+<!-- SCORE -->
+<div id="score">🎯 Score: 0</div>
+
+<!-- SCREEN 1 (GAME) -->
+<div id="screen1">
+  <h1>🎮 Fireworks Click Game 🎆</h1>
+  <p>Click anywhere to burst fireworks & earn score!</p>
+  <button onclick="startGame()">Start Game ▶</button>
+</div>
+
+<!-- SCREEN 2 -->
+<div id="screen2">
+  <h2>🎉 Happy Birthday Rimsha 🎂</h2>
+
+  <p>
+    💖 You are truly special!<br>
+    May your life be filled with happiness, love and success ✨🎆
+  </p>
+
+  <div id="emoji">🎂🎉💖✨</div>
+</div>
+
+<script>
+
+let score = 0;
+let screen1 = document.getElementById("screen1");
+let screen2 = document.getElementById("screen2");
+let scoreBox = document.getElementById("score");
+
+/* START GAME */
+function startGame(){
+  screen1.style.display="none";
+}
+
+/* CLICK FIREWORK GAME */
+document.addEventListener("click",function(e){
+  if(screen1.style.display !== "none") return;
+
+  score++;
+  scoreBox.innerHTML = "🎯 Score: " + score;
+
+  // fire explosion
+  for(let i=0;i<20;i++){
+    let p=document.createElement("div");
+    p.className="particle";
+    p.style.left=e.clientX+"px";
+    p.style.top=e.clientY+"px";
+    p.style.background="hsl("+Math.random()*360+",100%,50%)";
+    document.body.appendChild(p);
+
+    let x=(Math.random()*10-5);
+    let y=(Math.random()*10-5);
+
+    let move=setInterval(()=>{
+      p.style.left=p.offsetLeft+x+"px";
+      p.style.top=p.offsetTop+y+"px";
+    },20);
+
+    setTimeout(()=>{
+      clearInterval(move);
+      p.remove();
+    },800);
+  }
+
+  // LEVEL COMPLETE
+  if(score===10){
+    setTimeout(()=>{
+      screen2.style.display="block";
+    },500);
+  }
+});
+
+/* BALLOONS */
+setInterval(()=>{
+  if(screen2.style.display==="block"){
+    let b=document.createElement("div");
+    b.className="balloon";
+    b.style.left=Math.random()*window.innerWidth+"px";
+    b.style.background="hsl("+Math.random()*360+",100%,50%)";
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),8000);
+  }
+},300);
+
+</script>
+
+</body>
+</html>
